@@ -85,5 +85,8 @@ target/
 *.swp
 *.swo
 
+# Lozhnikov repo
+lozhnikov/
+
 # Mypy cache
 .mypy_cache/

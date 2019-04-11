@@ -22,17 +22,3 @@ def plot_confusion_matrix(cm, classes, title='Confusion matrix', cmap=plt.cm.Blu
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.show()
-    
-def plot_coefficients(classifier, feature_names, class_number = 0, top_features=20):
-    coef = classifier.coef_[class_number, :].ravel()
-    top_positive_coefficients = np.argsort(coef)[-top_features:]
-    top_negative_coefficients = np.argsort(coef)[:top_features]
-    top_coefficients = np.hstack([top_negative_coefficients, top_positive_coefficients])
-    # create plot
-    plt.figure(figsize=(15, 5))
-    colors = ['tab:pink' if c < 0 else 'tab:green' for c in coef[top_coefficients]]
-    plt.bar(np.arange(2 * top_features), coef[top_coefficients], color=colors)
-    feature_names = np.array(feature_names)
-    plt.xticks(np.arange(1, 1 + 2 * top_features), feature_names[top_coefficients], rotation=60, ha='right')
-    print(classifier.classes_[class_number])
-    plt.show()
