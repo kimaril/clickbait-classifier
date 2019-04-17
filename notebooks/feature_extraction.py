@@ -7,6 +7,7 @@ import numpy as np
 from text_preprocessing import Word2VecProcessor, Preprocessor
 from scipy.spatial.distance import cosine
 from tqdm import tqdm
+from rouge import Rouge
 
 
 word2vec = Word2VecProcessor(model_path="../data/external/184.zip")
@@ -107,7 +108,7 @@ def chargrams(input, n):
 
 
 def append_chargrams(features, text_headline, text_body, size):
-    grams = [" ".join(x) for x in chargrams(" ".join(p.remove_stopwords(text_headline)), size)]
+    grams = [" ".join(x) for x in chargrams(" ".join(text_headline), size)]
     grams_hits = 0
     grams_early_hits = 0
     grams_first_hits = 0
@@ -145,6 +146,23 @@ def cosine_features(headlines, bodies):
         X.append(cos)
     return X
 
+def rouge_features(headlines, bodies):
+    X = []
+    rouge = Rouge()
+    fails = 0
+    for h, b in tqdm(zip(headlines, bodies)):
+        rouge_values = []
+        try:
+            scores = rouge.get_scores(h, b)
+            rouge_values += [scores[0]['rouge-1']['f']]
+            rouge_values += [scores[0]['rouge-2']['f']]
+            rouge_values += [scores[0]['rouge-l']['f']]
+        except:
+            rouge_values = [0,0,0]
+            fails += 1
+        X += [rouge_values]
+    print("Number of fails: {}".format(fails))
+    return X
 
 def hand_features(headlines, bodies):
 
@@ -166,7 +184,7 @@ def hand_features(headlines, bodies):
         # are ignored.
         bin_count = 0
         bin_count_early = 0
-        for headline_token in p.remove_stopwords(headline):
+        for headline_token in headline:
             if headline_token in body:
                 bin_count += 1
                 bin_count_early += 1
