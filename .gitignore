@@ -87,6 +87,15 @@ target/
 
 # Lozhnikov repo
 lozhnikov/
-
+docs/
+references/
+reports/
+.gitignore
+LICENSE
+Makefile
+requirements.txt
+setup.py
+test_environment.py
+tox.ini
 # Mypy cache
 .mypy_cache/
